@@ -51,4 +51,15 @@ class LiveValidationTest < Test::Unit::TestCase
     assert_kind_of(Hash, Resource.live_validations[:amount][:numericality])
     assert_equal("isn't a valid number", Resource.live_validations[:amount][:numericality][:notANumberMessage])
   end
+
+  def test_format
+    Resource.class_eval do
+      validates_format_of :name, :with => /^\w+$/, :message => "only letters are accepted"
+    end
+    assert_kind_of(Hash, Resource.live_validations[:name])
+    assert_kind_of(Hash, Resource.live_validations[:name][:format])
+    assert_equal("only letters are accepted", Resource.live_validations[:name][:format][:failureMessage])
+    assert_equal(/^\w+$/, Resource.live_validations[:name][:format][:pattern])
+  end
+  
 end
