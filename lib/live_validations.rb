@@ -4,11 +4,13 @@ module ActiveRecord
       :failureMessage => :message,
       :pattern => :with
     }
+    # more complicated mappings in map_configuration method
     
     VALIDATION_METHODS = {
       :presence => "Validate.Presence",
       :numericality => "Validate.Numericality",
-      :format => "Validate.Format"
+      :format => "Validate.Format",
+      :length => "Validate.Length"
     }
     
     
@@ -46,6 +48,10 @@ module ActiveRecord
           configuration[live] = configuration.delete(rails)
         end
         configuration[:notANumberMessage] = configuration.delete(:failureMessage) if type == :numericality
+        if type == :length and range = ( configuration.delete(:in) || configuration.delete(:within) )
+          configuration[:minimum] = range.begin
+          configuration[:maximum] = range.end
+        end
         configuration.reject {|k, v| v.nil? }
       end
     end

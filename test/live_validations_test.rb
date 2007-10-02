@@ -62,4 +62,38 @@ class LiveValidationTest < Test::Unit::TestCase
     assert_equal(/^\w+$/, Resource.live_validations[:name][:format][:pattern])
   end
   
+  def test_length_max
+    Resource.class_eval do
+      validates_length_of :name, :maximum => 10, :message => "must be under 10 characters long"
+    end
+    assert_kind_of(Hash, Resource.live_validations[:name])
+    assert_kind_of(Hash, Resource.live_validations[:name][:length])
+    assert_equal("must be under 10 characters long", Resource.live_validations[:name][:length][:failureMessage])
+    assert_equal(10, Resource.live_validations[:name][:length][:maximum])
+  end
+  
+  def test_length_min
+    Resource.class_eval do
+      validates_length_of :name, :minimum => 4, :message => "must be more than 4 characters long"
+    end
+    assert_kind_of(Hash, Resource.live_validations[:name])
+    assert_kind_of(Hash, Resource.live_validations[:name][:length])
+    assert_equal("must be more than 4 characters long", Resource.live_validations[:name][:length][:failureMessage])
+    assert_equal(4, Resource.live_validations[:name][:length][:minimum])
+  end
+  
+  def test_length_range
+    Resource.class_eval do
+      validates_length_of :name, :in => 4..10, :message => "must be between 4 and 10 characters long"
+    end
+    assert_kind_of(Hash, Resource.live_validations[:name])
+    assert_kind_of(Hash, Resource.live_validations[:name][:length])
+    assert_equal("must be between 4 and 10 characters long", Resource.live_validations[:name][:length][:failureMessage])
+    assert_equal(4, Resource.live_validations[:name][:length][:minimum])
+    assert_equal(10, Resource.live_validations[:name][:length][:maximum])
+    assert_nil(Resource.live_validations[:name][:length][:in])
+  end
+  
+  
+  
 end
