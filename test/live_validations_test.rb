@@ -119,6 +119,16 @@ class LiveValidationTest < Test::Unit::TestCase
     assert_nil(Resource.live_validations[:name][:length][:in])
   end
   
+  def test_length_exact
+    Resource.class_eval do
+      validates_length_of :name, :is => 5, :message => "must be 5 characters long"
+    end
+    assert_kind_of(Hash, Resource.live_validations[:name])
+    assert_kind_of(Hash, Resource.live_validations[:name][:length])
+    assert_equal("must be 5 characters long", Resource.live_validations[:name][:length][:failureMessage])
+    assert_equal(5, Resource.live_validations[:name][:length][:is])
+  end
+  
   
   
 end
