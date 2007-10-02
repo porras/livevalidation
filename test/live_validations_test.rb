@@ -64,6 +64,17 @@ class LiveValidationTest < Test::Unit::TestCase
     assert_kind_of(Hash, Resource.live_validations[:amount])
     assert_kind_of(Hash, Resource.live_validations[:amount][:numericality])
     assert_equal("isn't a valid number", Resource.live_validations[:amount][:numericality][:notANumberMessage])
+    assert(!Resource.live_validations[:amount][:numericality][:onlyInteger])
+  end
+  
+  def test_numericality_only_integer
+    Resource.class_eval do
+      validates_numericality_of :amount, :only_integer => true, :message => "isn't an integer number"
+    end
+    assert_kind_of(Hash, Resource.live_validations[:amount])
+    assert_kind_of(Hash, Resource.live_validations[:amount][:numericality])
+    assert_equal("isn't an integer number", Resource.live_validations[:amount][:numericality][:notAnIntegerMessage])
+    assert(Resource.live_validations[:amount][:numericality][:onlyInteger])
   end
 
   def test_format

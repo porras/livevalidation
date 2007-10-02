@@ -2,20 +2,21 @@ module ActiveRecord
   module Validations
     LIVE_VALIDATIONS_OPTIONS = {
       :failureMessage => :message,
-      :pattern => :with
+      :pattern => :with,
+      :onlyInteger => :only_integer
     }
     # more complicated mappings in map_configuration method
-    
+
     VALIDATION_METHODS = {
       :presence => "Validate.Presence",
       :numericality => "Validate.Numericality",
       :format => "Validate.Format",
       :length => "Validate.Length"
     }
-    
-    
+
+
     module ClassMethods
-      
+
       VALIDATION_METHODS.keys.each do |type|
         define_method "validates_#{type}_of_with_live_validations".to_sym do |*attr_names|
           send "validates_#{type}_of_without_live_validations".to_sym, *attr_names
@@ -29,7 +30,7 @@ module ActiveRecord
       end
 
       private
-      
+
       def define_validations(validation_type, attr_names)
         configuration = map_configuration(attr_names.pop, validation_type) if attr_names.last.is_a?(Hash)
         attr_names.each do |attr_name|
@@ -42,12 +43,18 @@ module ActiveRecord
         @live_validations[attr_name] ||= {}
         @live_validations[attr_name][type] = configuration
       end
-      
+
       def map_configuration(configuration, type = nil)
         LIVE_VALIDATIONS_OPTIONS.each do |live, rails|
           configuration[live] = configuration.delete(rails)
         end
-        configuration[:notANumberMessage] = configuration.delete(:failureMessage) if type == :numericality
+        if type == :numericality
+          if configuration[:onlyInteger]
+            configuration[:notAnIntegerMessage] = configuration.delete(:failureMessage)
+          else
+            configuration[:notANumberMessage] = configuration.delete(:failureMessage)
+          end
+        end
         if type == :length and range = ( configuration.delete(:in) || configuration.delete(:within) )
           configuration[:minimum] = range.begin
           configuration[:maximum] = range.end
