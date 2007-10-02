@@ -34,6 +34,20 @@ class LiveValidationTest < Test::Unit::TestCase
     assert_equal({}, Resource.live_validations)
   end
   
+  def test_without_ok_message
+    Resource.class_eval do
+      validates_presence_of :name, :message => "can't be blank"
+    end
+    assert_equal("", Resource.live_validations[:name][:presence][:validMessage])
+  end
+
+  def test_with_ok_message
+    Resource.class_eval do
+      validates_presence_of :name, :message => "can't be blank", :validMessage => 'thank you!'
+    end
+    assert_equal("thank you!", Resource.live_validations[:name][:presence][:validMessage])
+  end
+    
   def test_presence
     Resource.class_eval do
       validates_presence_of :name, :message => "can't be blank"

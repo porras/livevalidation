@@ -52,6 +52,7 @@ module ActiveRecord
           configuration[:minimum] = range.begin
           configuration[:maximum] = range.end
         end
+        configuration[:validMessage] ||= ''
         configuration.reject {|k, v| v.nil? }
       end
     end
