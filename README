@@ -1,4 +1,6 @@
 LiveValidation
 ==============
 
-Description goes here
+LiveValidation is a plugin which allows automatic integration of your Rails application with Javascript library LiveValidation [http://www.livevalidation.org/]. This library implements client-side form validation.
+
+This plugin generates the needed Javascript code to run client-side the validations you have already defined in your models (with Rails validation helpers) to run them server-side, and redefines form helpers to automaticaly include that Javascript code. You have not to write your validations twice so you can keep DRY. And if you have 1) used Rails validation helpers to validate your models, and 2) used Rails form helpers to create your forms, you only have to install this plugin to get your forms validated both server and client-side!

@@ -52,8 +52,6 @@ class LiveValidationTest < Test::Unit::TestCase
     Resource.class_eval do
       validates_presence_of :name, :message => "can't be blank"
     end
-    assert_kind_of(Hash, Resource.live_validations[:name])
-    assert_kind_of(Hash, Resource.live_validations[:name][:presence])
     assert_equal("can't be blank", Resource.live_validations[:name][:presence][:failureMessage])
   end
   
@@ -61,8 +59,6 @@ class LiveValidationTest < Test::Unit::TestCase
     Resource.class_eval do
       validates_numericality_of :amount, :message => "isn't a valid number"
     end
-    assert_kind_of(Hash, Resource.live_validations[:amount])
-    assert_kind_of(Hash, Resource.live_validations[:amount][:numericality])
     assert_equal("isn't a valid number", Resource.live_validations[:amount][:numericality][:notANumberMessage])
     assert(!Resource.live_validations[:amount][:numericality][:onlyInteger])
   end
@@ -71,8 +67,6 @@ class LiveValidationTest < Test::Unit::TestCase
     Resource.class_eval do
       validates_numericality_of :amount, :only_integer => true, :message => "isn't an integer number"
     end
-    assert_kind_of(Hash, Resource.live_validations[:amount])
-    assert_kind_of(Hash, Resource.live_validations[:amount][:numericality])
     assert_equal("isn't an integer number", Resource.live_validations[:amount][:numericality][:notAnIntegerMessage])
     assert(Resource.live_validations[:amount][:numericality][:onlyInteger])
   end
@@ -81,8 +75,6 @@ class LiveValidationTest < Test::Unit::TestCase
     Resource.class_eval do
       validates_format_of :name, :with => /^\w+$/, :message => "only letters are accepted"
     end
-    assert_kind_of(Hash, Resource.live_validations[:name])
-    assert_kind_of(Hash, Resource.live_validations[:name][:format])
     assert_equal("only letters are accepted", Resource.live_validations[:name][:format][:failureMessage])
     assert_equal(/^\w+$/, Resource.live_validations[:name][:format][:pattern])
   end
@@ -91,8 +83,6 @@ class LiveValidationTest < Test::Unit::TestCase
     Resource.class_eval do
       validates_length_of :name, :maximum => 10, :message => "must be under 10 characters long"
     end
-    assert_kind_of(Hash, Resource.live_validations[:name])
-    assert_kind_of(Hash, Resource.live_validations[:name][:length])
     assert_equal("must be under 10 characters long", Resource.live_validations[:name][:length][:failureMessage])
     assert_equal(10, Resource.live_validations[:name][:length][:maximum])
   end
@@ -101,8 +91,6 @@ class LiveValidationTest < Test::Unit::TestCase
     Resource.class_eval do
       validates_length_of :name, :minimum => 4, :message => "must be more than 4 characters long"
     end
-    assert_kind_of(Hash, Resource.live_validations[:name])
-    assert_kind_of(Hash, Resource.live_validations[:name][:length])
     assert_equal("must be more than 4 characters long", Resource.live_validations[:name][:length][:failureMessage])
     assert_equal(4, Resource.live_validations[:name][:length][:minimum])
   end
@@ -111,8 +99,6 @@ class LiveValidationTest < Test::Unit::TestCase
     Resource.class_eval do
       validates_length_of :name, :in => 4..10, :message => "must be between 4 and 10 characters long"
     end
-    assert_kind_of(Hash, Resource.live_validations[:name])
-    assert_kind_of(Hash, Resource.live_validations[:name][:length])
     assert_equal("must be between 4 and 10 characters long", Resource.live_validations[:name][:length][:failureMessage])
     assert_equal(4, Resource.live_validations[:name][:length][:minimum])
     assert_equal(10, Resource.live_validations[:name][:length][:maximum])
@@ -123,12 +109,8 @@ class LiveValidationTest < Test::Unit::TestCase
     Resource.class_eval do
       validates_length_of :name, :is => 5, :message => "must be 5 characters long"
     end
-    assert_kind_of(Hash, Resource.live_validations[:name])
-    assert_kind_of(Hash, Resource.live_validations[:name][:length])
     assert_equal("must be 5 characters long", Resource.live_validations[:name][:length][:failureMessage])
     assert_equal(5, Resource.live_validations[:name][:length][:is])
   end
-  
-  
   
 end
