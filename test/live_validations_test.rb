@@ -16,6 +16,7 @@ class Resource < ActiveRecord::Base
   column :id, :integer
   column :name, :string
   column :amount, :integer
+  column :conditions, :boolean
 end
 
 class LiveValidationTest < Test::Unit::TestCase
@@ -111,6 +112,13 @@ class LiveValidationTest < Test::Unit::TestCase
     end
     assert_equal("must be 5 characters long", Resource.live_validations[:name][:length][:failureMessage])
     assert_equal(5, Resource.live_validations[:name][:length][:is])
+  end
+  
+  def test_acceptance
+    Resource.class_eval do
+      validates_acceptance_of :conditions, :message => "you must accept conditions"
+    end
+    assert_equal("you must accept conditions", Resource.live_validations[:conditions][:acceptance][:failureMessage])
   end
   
 end
