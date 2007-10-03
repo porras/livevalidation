@@ -121,4 +121,11 @@ class LiveValidationTest < Test::Unit::TestCase
     assert_equal("you must accept conditions", Resource.live_validations[:conditions][:acceptance][:failureMessage])
   end
   
+  def test_confirmation
+    Resource.class_eval do
+      validates_confirmation_of :name, :message => "doesn't match"
+    end
+    assert_equal("doesn't match", Resource.live_validations[:name][:confirmation][:failureMessage])
+  end
+  
 end

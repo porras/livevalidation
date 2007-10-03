@@ -12,7 +12,8 @@ module ActiveRecord
       :numericality => "Validate.Numericality",
       :format => "Validate.Format",
       :length => "Validate.Length",
-      :acceptance => "Validate.Acceptance"
+      :acceptance => "Validate.Acceptance",
+      :confirmation => "Validate.Confirmation"
     }
 
 
