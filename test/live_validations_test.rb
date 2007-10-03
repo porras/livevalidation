@@ -56,6 +56,14 @@ class LiveValidationTest < Test::Unit::TestCase
     assert_equal("can't be blank", Resource.live_validations[:name][:presence][:failureMessage])
   end
   
+  def test_presence_more_than_one_attribute
+    Resource.class_eval do
+      validates_presence_of :name, :amount, :message => "can't be blank"
+    end
+    assert_equal("can't be blank", Resource.live_validations[:name][:presence][:failureMessage])
+    assert_equal("can't be blank", Resource.live_validations[:amount][:presence][:failureMessage])
+  end
+  
   def test_numericality
     Resource.class_eval do
       validates_numericality_of :amount, :message => "isn't a valid number"
