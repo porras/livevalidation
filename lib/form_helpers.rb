@@ -3,6 +3,10 @@ module ActionView
     module FormHelper
       def text_field_with_live_validations(object_name, method, options = {})
         text_field_without_live_validations(object_name, method, options = {}) +
+        live_validations_for(object_name, method)
+      end
+
+      def live_validations_for(object_name, method)
         script_tags(live_validation(object_name, method))
       end
       
