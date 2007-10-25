@@ -10,16 +10,27 @@ require File.dirname(__FILE__) + '/../test/resource'
 
 class ResourcesController < ActionController::Base
   def without_instance_var
-    render :inline => "<% form_for(:resource, :url => resources_path) do |f| %><%= f.text_field :name %><% end %>"
+    render_form(:text, :name)
   end
 
   def name
     @resource = Resource.new
-    render :inline => "<% form_for(:resource, :url => resources_path) do |f| %><%= f.text_field :name %><% end %>"
+    render_form(:text, :name)
+  end
+  
+  def amount
+    @resource = Resource.new
+    render_form(:text, :amount)
   end
 
   def rescue_action(e)
     raise e
+  end
+  
+  private
+  
+  def render_form(type, method)
+    render :inline => "<% form_for(:resource, :url => resources_path) do |f| %><%= f.#{type}_field :#{method} %><% end %>"    
   end
 end
 
@@ -49,9 +60,33 @@ class FormHelpersTest < Test::Unit::TestCase
       validates_presence_of :name
     end
     get :name
-    check_form_item :type => 'text', :name => 'name', :script => "var resource_name = new LiveValidation('resource_name');resource_name.add(Validate.Presence, null)"
+    check_form_item :type => 'text', :name => 'name', :script => "var resource_name = new LiveValidation('resource_name');resource_name.add(Validate.Presence, {validMessage: \"\"})"
   end
 
+  def test_presence_with_message
+    Resource.class_eval do
+      validates_presence_of :name, :message => 'is required'
+    end
+    get :name
+    check_form_item :type => 'text', :name => 'name', :script => "var resource_name = new LiveValidation('resource_name');resource_name.add(Validate.Presence, {validMessage: \"\", failureMessage: \"is required\"})"
+  end
+
+  def test_numericality
+    Resource.class_eval do
+      validates_numericality_of :amount
+    end
+    get :amount
+    check_form_item :type => 'text', :name => 'amount', :script => "var resource_amount = new LiveValidation('resource_amount');resource_amount.add(Validate.Numericality, {validMessage: \"\"})"
+  end
+
+  def test_numericality_only_integer
+    Resource.class_eval do
+      validates_numericality_of :amount, :only_integer => true
+    end
+    get :amount
+    check_form_item :type => 'text', :name => 'amount', :script => "var resource_amount = new LiveValidation('resource_amount');resource_amount.add(Validate.Numericality, {onlyInteger: true, validMessage: \"\"})"
+  end
+  
   private
 
   def check_form_item(options = {})

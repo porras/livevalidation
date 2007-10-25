@@ -34,7 +34,7 @@ module ActiveRecord
       private
 
       def define_validations(validation_type, attr_names)
-        configuration = map_configuration(attr_names.pop, validation_type) if attr_names.last.is_a?(Hash)
+        configuration = map_configuration((attr_names.last.is_a?(Hash) ? attr_names.pop : {}), validation_type)
         attr_names.each do |attr_name|
           add_live_validation(attr_name, validation_type, configuration)
         end

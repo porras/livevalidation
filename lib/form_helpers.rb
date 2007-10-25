@@ -31,7 +31,7 @@ module ActionView
       end
       
       def live_validation_code(field_name, type, configuration)
-        "#{field_name}.add(#{ActiveRecord::Validations::VALIDATION_METHODS[type]}, #{configuration.to_json})"
+        "#{field_name}.add(#{ActiveRecord::Validations::VALIDATION_METHODS[type]}" + ( configuration ? ", #{configuration.to_json}" : '') + ')'
       end
       
       def script_tags(js_code = '')
