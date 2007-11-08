@@ -13,6 +13,11 @@ class ResourcesController < ActionController::Base
     render_form(:text, :name)
   end
 
+  def without_live
+    @resource = Resource.new
+    render :inline => "<% form_for(:resource, :url => resources_path) do |f| %><%= f.text_field :name, :live => false %><% end %>" 
+  end
+
   def name
     @resource = Resource.new
     render_form(:text, :name)
@@ -52,6 +57,14 @@ class FormHelpersTest < Test::Unit::TestCase
 
   def test_without_instance_var
     get :without_instance_var
+    check_form_item :type => 'text', :name => 'name'
+  end
+
+  def test_without_live
+    Resource.class_eval do
+      validates_presence_of :name
+    end
+    get :without_live
     check_form_item :type => 'text', :name => 'name'
   end
 
