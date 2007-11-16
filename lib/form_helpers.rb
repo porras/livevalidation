@@ -17,7 +17,7 @@ module ActionView
       private
       
       def live_validation(object_name, method)
-        if validations = self.instance_variable_get("@#{object_name.to_s}").class.live_validations[method] rescue false
+        if validations = self.instance_variable_get("@#{object_name.to_s}").class.live_validations[method.to_sym] rescue false
           field_name = "#{object_name}_#{method}"
           initialize_validator(field_name) +
           validations.map do |type, configuration|

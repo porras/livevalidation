@@ -18,6 +18,11 @@ class ResourcesController < ActionController::Base
     render :inline => "<% form_for(:resource, :url => resources_path) do |f| %><%= f.text_field :name, :live => false %><% end %>" 
   end
 
+  def with_string
+    @resource = Resource.new
+    render :inline => "<% form_for(:resource, :url => resources_path) do |f| %><%= f.text_field 'name' %><% end %>"    
+  end
+
   def name
     @resource = Resource.new
     render_form(:text, :name)
@@ -66,6 +71,14 @@ class FormHelpersTest < Test::Unit::TestCase
     end
     get :without_live
     check_form_item :type => 'text', :name => 'name'
+  end
+
+  def test_with_string
+    Resource.class_eval do
+      validates_presence_of :name
+    end
+    get :with_string
+    check_form_item :type => 'text', :name => 'name', :script => "var resource_name = new LiveValidation('resource_name');resource_name.add(Validate.Presence, {validMessage: \"\"})"
   end
 
   def test_presence
