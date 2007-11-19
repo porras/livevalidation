@@ -73,6 +73,14 @@ class FormHelpersTest < Test::Unit::TestCase
     check_form_item :type => 'text', :name => 'name'
   end
 
+  def test_without_live_global
+    Resource.class_eval do
+      validates_presence_of :name, :live => false
+    end
+    get :name
+    check_form_item :type => 'text', :name => 'name'
+  end
+
   def test_with_string
     Resource.class_eval do
       validates_presence_of :name

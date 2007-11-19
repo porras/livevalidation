@@ -41,6 +41,9 @@ module ActiveRecord
       end
 
       def add_live_validation(attr_name, type, configuration = {})
+        live = configuration.delete(:live)
+        live = true if live.nil?
+        return unless live
         @live_validations ||= {}
         @live_validations[attr_name] ||= {}
         @live_validations[attr_name][type] = configuration
