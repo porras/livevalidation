@@ -1,9 +1,13 @@
 module ActionView
+  
+  mattr_accessor :live_validations
+  ActionView::live_validations = true
+  
   module Helpers
     module FormHelper
       def text_field_with_live_validations(object_name, method, options = {})
         live = options.delete(:live)
-        live = true if live.nil?
+        live = ActionView::live_validations if live.nil?
         text_field_without_live_validations(object_name, method, options) +
         ( live ? live_validations_for(object_name, method) : '' )
       end

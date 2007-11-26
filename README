@@ -26,13 +26,17 @@ This plugin generates the needed Javascript code to run client-side the validati
     [etc ...]
     <% end %>
 
-You can disable live validation using '':live => false'', either for a given field:
+You can disable live validation for a given field using <tt>:live => false</tt>:
 
     <%= f.text_field :name, :live => false %>
 
-or for a whole validation:
+You can also reverse this schema so the default is **no validation**, including this in your <tt>config/environment.rb</tt>:
 
-    validates_presence_of :name, :live => false
+		ActionView::live_validations = false
+		
+and enabling it only for some fields:
+
+    <%= f.text_field :name, :live => true %>
 
 == TODO
 

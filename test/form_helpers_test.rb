@@ -17,6 +17,11 @@ class ResourcesController < ActionController::Base
     @resource = Resource.new
     render :inline => "<% form_for(:resource, :url => resources_path) do |f| %><%= f.text_field :name, :live => false %><% end %>" 
   end
+  
+  def with_live
+    @resource = Resource.new
+    render :inline => "<% form_for(:resource, :url => resources_path) do |f| %><%= f.text_field :name, :live => true %><% end %>" 
+  end
 
   def with_string
     @resource = Resource.new
@@ -58,6 +63,7 @@ class FormHelpersTest < Test::Unit::TestCase
     Resource.class_eval do # reset live validations
       @live_validations = {}
     end
+    ActionView::live_validations = true # reset default behaviour
   end
 
   def test_without_instance_var
@@ -73,14 +79,26 @@ class FormHelpersTest < Test::Unit::TestCase
     check_form_item :type => 'text', :name => 'name'
   end
 
-  def test_without_live_global
+  def test_without_live_with_false_default
+    ActionView::live_validations = false
     Resource.class_eval do
-      validates_presence_of :name, :live => false
+      validates_presence_of :name
     end
     get :name
     check_form_item :type => 'text', :name => 'name'
   end
-
+  
+  def test_with_live_with_false_default
+    ActionView::live_validations = false
+    Resource.class_eval do
+      validates_presence_of :name
+    end
+    get :with_live
+    check_form_item :type => 'text', :name => 'name' do |script|
+      assert_matches script, "var resource_name = new LiveValidation('resource_name');resource_name.add(Validate.Presence, {validMessage: \"\"})"
+    end
+  end
+  
   def test_with_string
     Resource.class_eval do
       validates_presence_of :name
