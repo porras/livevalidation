@@ -41,8 +41,6 @@ and enabling it only for some fields:
 == TODO
 
 * Support some lacking validations and options (mainly, <tt>validates_confirmation_of</tt>)
-* More tests
-* Better documentation ;)
 
 == Author
 
