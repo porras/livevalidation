@@ -27,6 +27,11 @@ class ResourcesController < ActionController::Base
     @resource = Resource.new
     render :inline => "<% form_for(:resource, :url => resources_path) do |f| %><%= f.text_field 'name' %><% end %>"    
   end
+  
+  def with_text_area
+    @resource = Resource.new
+    render :inline => "<% form_for(:resource, :url => resources_path) do |f| %><%= f.text_area :name %><% end %>"    
+  end
 
   def name
     @resource = Resource.new
@@ -106,6 +111,18 @@ class FormHelpersTest < Test::Unit::TestCase
     get :with_string
     check_form_item :type => 'text', :name => 'name' do |script|
       assert_matches script, "var resource_name = new LiveValidation('resource_name');resource_name.add(Validate.Presence, {validMessage: \"\"})"
+    end
+  end
+  
+  def test_with_text_area
+    Resource.class_eval do
+      validates_presence_of :name
+    end
+    get :with_text_area
+    assert_response :ok
+    assert_select 'form[action="/resources"]' do
+      assert_select "textarea[id='resource_name']"
+      assert_select 'script', "var resource_name = new LiveValidation('resource_name');resource_name.add(Validate.Presence, {validMessage: \"\"})"
     end
   end
 

@@ -5,18 +5,19 @@ module ActionView
   
   module Helpers
     module FormHelper
-      def text_field_with_live_validations(object_name, method, options = {})
-        live = options.delete(:live)
-        live = ActionView::live_validations if live.nil?
-        text_field_without_live_validations(object_name, method, options) +
-        ( live ? live_validations_for(object_name, method) : '' )
+      [ :text_field, :text_area ].each do |field_type|
+        define_method "#{field_type}_with_live_validations" do |object_name, method, options|
+          live = options.delete(:live)
+          live = ActionView::live_validations if live.nil?
+          send("#{field_type}_without_live_validations", object_name, method, options) +
+          ( live ? live_validations_for(object_name, method) : '' )
+        end
+        alias_method_chain field_type, :live_validations
       end
 
       def live_validations_for(object_name, method)
         script_tags(live_validation(object_name, method))
       end
-      
-      alias_method_chain :text_field, :live_validations
       
       private
       
