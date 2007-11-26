@@ -86,7 +86,9 @@ class FormHelpersTest < Test::Unit::TestCase
       validates_presence_of :name
     end
     get :with_string
-    check_form_item :type => 'text', :name => 'name', :script => "var resource_name = new LiveValidation('resource_name');resource_name.add(Validate.Presence, {validMessage: \"\"})"
+    check_form_item :type => 'text', :name => 'name' do |script|
+      assert_matches script, "var resource_name = new LiveValidation('resource_name');resource_name.add(Validate.Presence, {validMessage: \"\"})"
+    end
   end
 
   def test_presence
@@ -94,7 +96,9 @@ class FormHelpersTest < Test::Unit::TestCase
       validates_presence_of :name
     end
     get :name
-    check_form_item :type => 'text', :name => 'name', :script => "var resource_name = new LiveValidation('resource_name');resource_name.add(Validate.Presence, {validMessage: \"\"})"
+    check_form_item :type => 'text', :name => 'name' do |script|
+      assert_matches script, "var resource_name = new LiveValidation('resource_name');resource_name.add(Validate.Presence, {validMessage: \"\"})"
+    end
   end
 
   def test_presence_with_message
@@ -102,7 +106,11 @@ class FormHelpersTest < Test::Unit::TestCase
       validates_presence_of :name, :message => 'is required'
     end
     get :name
-    check_form_item :type => 'text', :name => 'name', :script => "var resource_name = new LiveValidation('resource_name');resource_name.add(Validate.Presence, {validMessage: \"\", failureMessage: \"is required\"})"
+    check_form_item :type => 'text', :name => 'name' do |script|
+      assert_matches script, /var resource_name = new LiveValidation\('resource_name'\);resource_name.add\(Validate.Presence, \{(.+)\}\)/
+      assert_matches script, "validMessage: \"\""
+      assert_matches script, "failureMessage: \"is required\""
+    end
   end
 
   def test_numericality
@@ -110,7 +118,9 @@ class FormHelpersTest < Test::Unit::TestCase
       validates_numericality_of :amount
     end
     get :amount
-    check_form_item :type => 'text', :name => 'amount', :script => "var resource_amount = new LiveValidation('resource_amount');resource_amount.add(Validate.Numericality, {validMessage: \"\"})"
+    check_form_item :type => 'text', :name => 'amount' do |script|
+      assert_matches script, "var resource_amount = new LiveValidation('resource_amount');resource_amount.add(Validate.Numericality, {validMessage: \"\"})"
+    end
   end
 
   def test_numericality_only_integer
@@ -118,20 +128,34 @@ class FormHelpersTest < Test::Unit::TestCase
       validates_numericality_of :amount, :only_integer => true
     end
     get :amount
-    check_form_item :type => 'text', :name => 'amount', :script => "var resource_amount = new LiveValidation('resource_amount');resource_amount.add(Validate.Numericality, {onlyInteger: true, validMessage: \"\"})"
+    check_form_item :type => 'text', :name => 'amount' do |script|
+      assert_matches script, /var resource_amount = new LiveValidation\('resource_amount'\);resource_amount.add\(Validate.Numericality, \{(.*)\}\)/
+      assert_matches script, "onlyInteger: true"
+      assert_matches script, "validMessage: \"\""
+    end
   end
   
   private
 
-  def check_form_item(options = {})
+  def check_form_item(options = {}, &blk)
     assert_response :ok
     assert_select 'form[action="/resources"]' do
       assert_select "input[type='#{options[:type]}'][id='resource_#{options[:name]}']"
-      if options[:script]
-        assert_select 'script', options[:script]
+      if block_given?
+        assert_select 'script' do |element|
+          yield(element.to_s)
+        end
       else
         assert_select 'script', 0
       end
+    end
+  end
+  
+  def assert_matches(string, regexp)
+    if regexp.is_a?(Regexp)
+      assert string =~ regexp, "#{string} doesn't match #{regexp}"
+    else
+      assert string[regexp], "#{string} doesn't match #{regexp}"
     end
   end
 
