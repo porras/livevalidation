@@ -30,9 +30,9 @@ You can disable live validation for a given field using <tt>:live => false</tt>:
 
     <%= f.text_field :name, :live => false %>
 
-You can also reverse this schema so the default is **no validation**, including this in your <tt>config/environment.rb</tt>:
+You can also reverse this schema so the default is <b>no validation</b>, including this in your <tt>config/environment.rb</tt>:
 
-		ActionView::live_validations = false
+    ActionView::live_validations = false
 		
 and enabling it only for some fields:
 
