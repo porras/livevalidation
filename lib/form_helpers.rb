@@ -5,7 +5,7 @@ module ActionView
   
   module Helpers
     module FormHelper
-      [ :text_field, :text_area ].each do |field_type|
+      [ :text_field, :text_area, :password_field ].each do |field_type|
         define_method "#{field_type}_with_live_validations" do |object_name, method, options|
           live = options.delete(:live)
           live = ActionView::live_validations if live.nil?

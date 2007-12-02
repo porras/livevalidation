@@ -42,6 +42,11 @@ class ResourcesController < ActionController::Base
     @resource = Resource.new
     render_form(:text, :amount)
   end
+  
+  def password
+    @resource = Resource.new
+    render :inline => "<% form_for(:resource, :url => resources_path) do |f| %><%= f.password_field :password %><%= f.password_field :password_confirmation %><% end %>"    
+  end
 
   def rescue_action(e)
     raise e
@@ -166,6 +171,18 @@ class FormHelpersTest < Test::Unit::TestCase
     check_form_item :type => 'text', :name => 'amount' do |script|
       assert_matches script, /var resource_amount = new LiveValidation\('resource_amount'\);resource_amount.add\(Validate.Numericality, \{(.*)\}\)/
       assert_matches script, "onlyInteger: true"
+      assert_matches script, "validMessage: \"\""
+    end
+  end
+  
+  def test_confirmation
+    Resource.class_eval do
+      validates_confirmation_of :password
+    end
+    get :password
+    check_form_item :type => 'password', :name => 'password' do |script|
+      assert_matches script, /var resource_password = new LiveValidation\('resource_password'\);resource_password.add\(Validate.Confirmation, \{(.*)\}\)/
+      assert_matches script, "match: \"resource_password_confirmation\""
       assert_matches script, "validMessage: \"\""
     end
   end

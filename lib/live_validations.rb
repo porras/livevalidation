@@ -34,8 +34,9 @@ module ActiveRecord
       private
 
       def define_validations(validation_type, attr_names)
-        configuration = map_configuration((attr_names.last.is_a?(Hash) ? attr_names.pop : {}), validation_type)
+        conf = (attr_names.last.is_a?(Hash) ? attr_names.pop : {})
         attr_names.each do |attr_name|
+          configuration = map_configuration(conf.dup, validation_type, attr_name)
           add_live_validation(attr_name, validation_type, configuration)
         end
       end
@@ -46,7 +47,7 @@ module ActiveRecord
         @live_validations[attr_name][type] = configuration
       end
 
-      def map_configuration(configuration, type = nil)
+      def map_configuration(configuration, type = nil, attr_name = '')
         LIVE_VALIDATIONS_OPTIONS.each do |live, rails|
           configuration[live] = configuration.delete(rails)
         end
@@ -60,6 +61,9 @@ module ActiveRecord
         if type == :length and range = ( configuration.delete(:in) || configuration.delete(:within) )
           configuration[:minimum] = range.begin
           configuration[:maximum] = range.end
+        end
+        if type == :confirmation
+          configuration[:match] = self.to_s.underscore + '_' + attr_name.to_s + '_confirmation'
         end
         configuration[:validMessage] ||= ''
         configuration.reject {|k, v| v.nil? }

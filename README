@@ -38,10 +38,6 @@ and enabling it only for some fields:
 
     <%= f.text_field :name, :live => true %>
 
-== TODO
-
-* Support some lacking validations and options (mainly, <tt>validates_confirmation_of</tt>)
-
 == Author
 
 Plugin written by {Sergio Gil}[http://www.lacoctelera.com/porras]. Mail me to <tt>sgilperez at gmail.com</tt> for bug reports, feature requests or any comment.

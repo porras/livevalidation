@@ -12,4 +12,6 @@ class Resource < ActiveRecord::Base
   column :name, :string
   column :amount, :integer
   column :conditions, :boolean
+  
+  attr_accessor :password
 end
