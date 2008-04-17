@@ -105,7 +105,7 @@ class FormHelpersTest < Test::Unit::TestCase
     end
     get :with_live
     check_form_item :type => 'text', :name => 'name' do |script|
-      assert_matches script, "var resource_name = new LiveValidation('resource_name');resource_name.add(Validate.Presence, {validMessage: \"\"})"
+      assert_matches script, "var resource_name = new LiveValidation('resource_name');resource_name.add(Validate.Presence, {\"validMessage\": \"\"})"
     end
   end
   
@@ -115,7 +115,7 @@ class FormHelpersTest < Test::Unit::TestCase
     end
     get :with_string
     check_form_item :type => 'text', :name => 'name' do |script|
-      assert_matches script, "var resource_name = new LiveValidation('resource_name');resource_name.add(Validate.Presence, {validMessage: \"\"})"
+      assert_matches script, "var resource_name = new LiveValidation('resource_name');resource_name.add(Validate.Presence, {\"validMessage\": \"\"})"
     end
   end
   
@@ -127,7 +127,7 @@ class FormHelpersTest < Test::Unit::TestCase
     assert_response :ok
     assert_select 'form[action="/resources"]' do
       assert_select "textarea[id='resource_name']"
-      assert_select 'script', "var resource_name = new LiveValidation('resource_name');resource_name.add(Validate.Presence, {validMessage: \"\"})"
+      assert_select 'script', "var resource_name = new LiveValidation('resource_name');resource_name.add(Validate.Presence, {\"validMessage\": \"\"})"
     end
   end
 
@@ -137,7 +137,7 @@ class FormHelpersTest < Test::Unit::TestCase
     end
     get :name
     check_form_item :type => 'text', :name => 'name' do |script|
-      assert_matches script, "var resource_name = new LiveValidation('resource_name');resource_name.add(Validate.Presence, {validMessage: \"\"})"
+      assert_matches script, "var resource_name = new LiveValidation('resource_name');resource_name.add(Validate.Presence, {\"validMessage\": \"\"})"
     end
   end
 
@@ -148,8 +148,8 @@ class FormHelpersTest < Test::Unit::TestCase
     get :name
     check_form_item :type => 'text', :name => 'name' do |script|
       assert_matches script, /var resource_name = new LiveValidation\('resource_name'\);resource_name.add\(Validate.Presence, \{(.+)\}\)/
-      assert_matches script, "validMessage: \"\""
-      assert_matches script, "failureMessage: \"is required\""
+      assert_matches script, "\"validMessage\": \"\""
+      assert_matches script, "\"failureMessage\": \"is required\""
     end
   end
 
@@ -159,7 +159,7 @@ class FormHelpersTest < Test::Unit::TestCase
     end
     get :amount
     check_form_item :type => 'text', :name => 'amount' do |script|
-      assert_matches script, "var resource_amount = new LiveValidation('resource_amount');resource_amount.add(Validate.Numericality, {validMessage: \"\"})"
+      assert_matches script, "var resource_amount = new LiveValidation('resource_amount');resource_amount.add(Validate.Numericality, {\"validMessage\": \"\"})"
     end
   end
 
@@ -170,8 +170,8 @@ class FormHelpersTest < Test::Unit::TestCase
     get :amount
     check_form_item :type => 'text', :name => 'amount' do |script|
       assert_matches script, /var resource_amount = new LiveValidation\('resource_amount'\);resource_amount.add\(Validate.Numericality, \{(.*)\}\)/
-      assert_matches script, "onlyInteger: true"
-      assert_matches script, "validMessage: \"\""
+      assert_matches script, "\"onlyInteger\": true"
+      assert_matches script, "\"validMessage\": \"\""
     end
   end
   
@@ -182,8 +182,8 @@ class FormHelpersTest < Test::Unit::TestCase
     get :password
     check_form_item :type => 'password', :name => 'password' do |script|
       assert_matches script, /var resource_password = new LiveValidation\('resource_password'\);resource_password.add\(Validate.Confirmation, \{(.*)\}\)/
-      assert_matches script, "match: \"resource_password_confirmation\""
-      assert_matches script, "validMessage: \"\""
+      assert_matches script, "\"match\": \"resource_password_confirmation\""
+      assert_matches script, "\"validMessage\": \"\""
     end
   end
   
