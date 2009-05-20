@@ -8,7 +8,7 @@ This plugin generates the needed Javascript code to run client-side the validati
 
 1. Install the plugin:
 
-    $ script/plugin install svn://rubyforge.org/var/svn/livevalidation
+    $ script/plugin install git://github.com/porras/livevalidation.git
 
 2. Install Javascript and CSS files under public/, with this Rake task:
 
