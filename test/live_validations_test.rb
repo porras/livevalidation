@@ -1,10 +1,6 @@
-require 'test/unit'
-require 'rubygems'
-require 'active_record'
-require File.dirname(__FILE__) + '/../lib/live_validations'
-require File.dirname(__FILE__) + '/../test/resource'
+require File.dirname(__FILE__) + '/../test/test_helper'
 
-class LiveValidationTest < Test::Unit::TestCase
+class LiveValidationTest < ActiveRecord::TestCase
   
   def setup
     Resource.class_eval do # reset live validations
