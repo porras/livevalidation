@@ -2,7 +2,7 @@
 
 Gem::Specification.new do |s|
   s.name = %q{livevalidation}
-  s.version = "0.0.0"
+  s.version = "0.0.1"
 
   s.required_rubygems_version = Gem::Requirement.new(">= 0") if s.respond_to? :required_rubygems_version=
   s.authors = ["Sergio Gil"]
@@ -13,15 +13,17 @@ Gem::Specification.new do |s|
     "README"
   ]
   s.files = [
-    "README",
+    ".gitignore",
+     "README",
      "Rakefile",
      "VERSION",
      "assets/javascripts/live_validation.js",
      "assets/stylesheets/live_validation.css",
-     "init.rb",
      "install.rb",
      "lib/form_helpers.rb",
      "lib/live_validations.rb",
+     "livevalidation.gemspec",
+     "rails/init.rb",
      "tasks/live_validation_tasks.rake",
      "test/form_helpers_test.rb",
      "test/live_validations_test.rb",
