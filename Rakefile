@@ -20,3 +20,16 @@ Rake::RDocTask.new(:rdoc) do |rdoc|
   rdoc.rdoc_files.include('README')
   rdoc.rdoc_files.include('lib/**/*.rb')
 end
+
+begin
+  require 'jeweler'
+  Jeweler::Tasks.new do |gemspec|
+    gemspec.name = "livevalidation"
+    gemspec.summary = "Easy client side validation for your ActiveRecord models"
+    gemspec.email = "sgilperez@gmail.com"
+    gemspec.homepage = "http://github.com/porras/livevalidation"
+    gemspec.description = "Easy client side validation for your ActiveRecord models"
+    gemspec.authors = ["Sergio Gil"]
+  end
+rescue LoadError
+end
